@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipytida Official • PipTako🍑, Hottest Videos🍑🔞</title>
+    <meta property="og:title" content="Pipytida Official • BigAss Gal🍑, PipTako🍑, BigBooty Gal🍑">
+    <meta property="og:description" content="BigAss Gal🍑, BigBooty Gal🍑, PipTako🍑, Hottest Girl🔞, Blessed Gal🍑, Watch Me👇 ">
+    <meta property="og:image" itemprop="image" content="https://pipytako.github.io/pip.jpg">
+    <meta property="og:type" content="website">
+    <meta property="fb:app_id" content="966242223397117">
+    <meta property="og:url" content="https://pipytako.github.io/">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="https://pipytako.github.io/piptako.png" type="image/png" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+        
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        .blue-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("back.jpg"); /* The image used */
+            background-color: #cccccc; /* Used if the image is unavailable */
+            height: 100%; /* You must set a specified height */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-size: cover; /* Resize the background image to cover the entire container */
+            z-index: 0;
+        }
+        
+        .dark-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 0;
+        }
+        
+        .verification-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(0px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+        
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #4a90e2;
+        }
+        
+        .age-badge {
+            background: #ff3366;
+            color: white;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+        
+        .time-note {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        
+        .password-container {
+            margin-bottom: 20px;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .password-input:focus {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+        
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn-submit {
+            background: #4a90e2;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #3a7bc8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-yes {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-yes:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-no {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-no:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        @media (max-width: 480px) {
+            .verification-container {
+                padding: 25px 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video background (hidden on password screen) -->
+    <video id="video-background" autoplay muted loop style="display: none;">
+        <source src="back2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <!-- Password Screen -->
+    <div class="blue-overlay" id="password-overlay"></div>
+    
+    <div class="verification-container" id="password-screen">
+        <div class="lock-icon">🔒</div>
+        <h1>Pipytida Official • Hottest Videos🍑🔞</h1>
+        <p>Enter the password to watch hottest videos [Password: Tako]</p>
+        
+        <div class="password-container">
+            <input type="password" class="password-input" id="password-input" placeholder="Enter password">
+            <center><button class="btn btn-submit" id="submit-password">Submit</button></center>
+            <div class="error-message" id="error-message">Incorrect password. Please try again.</div>
+        </div>
+        
+        <div class="footer">🔞Warning: The following videos are for adults only 18+</div>
+    </div>
+    
+    <!-- Age Verification Screen (hidden initially) -->
+    <div class="dark-overlay" id="age-overlay" style="display: none;"></div>
+    
+    <div class="verification-container" id="age-screen" style="display: none;">
+        <div class="age-badge">18+</div>
+        <h1>Pipytida Official • Hottest Videos🍑🔞</h1>
+        <p>Verify your age to watch videos</p>
+        <div class="time-note">We need to confirm you're old enough to view this videos</div>
+        
+        <div class="button-container">
+            <a class="btn btn-yes" onclick="window.open('age-verify.html');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">No, I'm 18-</a>
+            <a class="btn btn-no" onclick="window.open('age-verify.html');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">Yes, I'm 18+</a>
+        </div>
+        
+        <div class="footer">Your privacy is important to us</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordScreen = document.getElementById('password-screen');
+            const ageScreen = document.getElementById('age-screen');
+            const passwordInput = document.getElementById('password-input');
+            const submitButton = document.getElementById('submit-password');
+            const errorMessage = document.getElementById('error-message');
+            const passwordOverlay = document.getElementById('password-overlay');
+            const ageOverlay = document.getElementById('age-overlay');
+            const videoBackground = document.getElementById('video-background');
+            
+            // Correct password
+            const correctPassword = "Tako";
+            
+            // Handle password submission
+            submitButton.addEventListener('click', function() {
+                if (passwordInput.value === correctPassword) {
+                    // Hide password screen
+                    passwordScreen.style.display = 'none';
+                    passwordOverlay.style.display = 'none';
+                    
+                    // Show age verification screen
+                    ageScreen.style.display = 'block';
+                    ageOverlay.style.display = 'block';
+                    videoBackground.style.display = 'block';
+                } else {
+                    // Show error message
+                    errorMessage.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            });
+            
+            // Allow pressing Enter to submit password
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    submitButton.click();
+                }
+            });
+            
+            // Focus on password input when page loads
+            passwordInput.focus();
+        });
+    </script>
+    <script>
+ // PWA Installation Prompt
+let deferredPrompt;
+const installPrompt = document.createElement('div');
+
+// Create and style the install prompt like Threads
+installPrompt.innerHTML = `
+  <div class="install-prompt">
+    <div class="install-content">
+      <div class="app-info">
+        <div class="app-icon-container">
+          <img src="piptako.png" alt="PipTako🍑" class="app-icon">
+        </div>
+        <div class="app-details">
+          <div class="app-name">PipTako🍑</div>
+          <div class="app-website">pipytako.github.io</div>
+        </div>
+      </div>
+      <div class="install-actions">
+        <button class="close-btn">&times;</button>
+        <button class="install-btn">Install</button>
+      </div>
+    </div>
+  </div>
+`;
+
+// Add styles for the install prompt
+const style = document.createElement('style');
+style.textContent = `
+  .install-prompt {
+    position: fixed;
+    top: -100px;
+    left: 10px;
+    right: 10px;
+    background: white;
+    color: black;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 10000;
+    transition: top 0.4s ease-out;
+    border: 1px solid #e0e0e0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .install-prompt.show {
+    top: 20px;
+  }
+  
+  .install-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .app-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+  
+  .app-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+  }
+  
+  .app-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .app-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  
+  .app-website {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .install-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .close-btn {
+    background: transparent;
+    border: none;
+    color: #666;
+    font-size: 20px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  
+  .close-btn:hover {
+    background: #f5f5f5;
+  }
+  
+  .install-btn {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 80px;
+  }
+  
+  .install-btn:hover {
+    background: #333;
+  }
+`;
+
+// Add elements to DOM
+document.head.appendChild(style);
+document.body.appendChild(installPrompt);
+
+const promptElement = installPrompt.querySelector('.install-prompt');
+const closeBtn = installPrompt.querySelector('.close-btn');
+const installBtn = installPrompt.querySelector('.install-btn');
+
+// Show install prompt
+function showInstallPrompt() {
+  setTimeout(() => {
+    promptElement.classList.add('show');
+  }, 2000); // Show after 2 seconds
+}
+
+// Hide install prompt
+function hideInstallPrompt() {
+  promptElement.classList.remove('show');
+}
+
+// Event listeners
+closeBtn.addEventListener('click', hideInstallPrompt);
+
+installBtn.addEventListener('click', async () => {
+  hideInstallPrompt();
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to the install prompt: ${outcome}`);
+    deferredPrompt = null;
+  }
+});
+
+// Listen for beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallPrompt();
+});
+
+// Listen for app installed event
+window.addEventListener('appinstalled', () => {
+  console.log('PipTako🍑 was installed successfully!');
+  deferredPrompt = null;
+});
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(registration => {
+        console.log('SW registered: ', registration);
+      })
+      .catch(registrationError => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
+    </script>
+</body>
+</html>

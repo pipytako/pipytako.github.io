@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipytida Official • Hottest Videos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-background video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+        
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+        
+        .verification-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+        
+        .verification-header {
+            background: #4285f4;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .verification-header h1 {
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+        
+        .verification-content {
+            padding: 20px;
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #5f6368;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .image-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            aspect-ratio: 1/1;
+            position: relative;
+        }
+        
+        .image-item:hover {
+            border-color: #4285f4;
+            transform: scale(1.03);
+        }
+        
+        .image-item.selected {
+            border-color: #4285f4;
+            background-color: #e8f0fe;
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+        
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .image-checkbox {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-item.selected .image-checkbox {
+            background: #4285f4;
+            border-color: #4285f4;
+        }
+        
+        .image-item.selected .image-checkbox:after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+        }
+        
+        .verify-button {
+            width: 100%;
+            padding: 14px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 15px;
+        }
+        
+        .verify-button:hover {
+            background: #3367d6;
+        }
+        
+        .verify-button:disabled {
+            background: #a8a8a8;
+            cursor: not-allowed;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .footer a {
+            color: #e8f0fe;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .success-message {
+            text-align: center;
+            color: #34a853;
+            font-weight: 500;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #4285f4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .continue-button {
+            width: 100%;
+            padding: 14px;
+            background: #34a853;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: none;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .continue-button:hover {
+            background: #2d9249;
+        }
+        
+        .age-confirmation {
+            text-align: center;
+            margin: 15px 0;
+            font-weight: 500;
+            color: #5f6368;
+            display: none;
+        }
+        
+        @media (max-width: 500px) {
+            .verification-container {
+                max-width: 100%;
+            }
+            
+            .image-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+            <source src="back.mp4" type="video/mp4">
+            <!-- Fallback image if video doesn't load -->
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM2ZThlZmIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNhNzc3ZTMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2cpIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIvPjwvc3ZnPg==" alt="Background">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+    
+    <div class="verification-container">
+        <div class="verification-header">
+            <h1>Verify Age If You're Above 18+</h1>
+        </div>
+        
+        <div class="verification-content">
+            <p class="instructions">Select all images with <strong>traffic lights</strong></p>
+            
+            <div class="image-grid" id="imageGrid">
+                <!-- Images will be dynamically inserted here -->
+            </div>
+            
+            <button class="verify-button" id="verifyButton" disabled>VERIFY</button>
+            
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Verifying...</p>
+            </div>
+            
+            <div class="age-confirmation" id="ageConfirmation">
+                Your age is confirmed. Continue to watch Pipitida videos.
+            </div>
+            
+            <a class="continue-button" id="continueButton" onclick="window.open('pip-videos.html');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">CONTINUE</a>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Protected by reCAPTCHA | <a onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">Privacy</a> | <a onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">Terms</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageGrid = document.getElementById('imageGrid');
+            const verifyButton = document.getElementById('verifyButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const ageConfirmation = document.getElementById('ageConfirmation');
+            const continueButton = document.getElementById('continueButton');
+            
+            // Sample images - in a real implementation, these would be served from a secure source
+            const imageSets = [
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMTAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzUxNTE1MSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMjUiIHI9IjEwIiBmaWxsPSIjZmYwMDAwIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTAiIGZpbGw9IiNmZmZmMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9Ijc1IiByPSIxMCIgZmlsbD0iIzAwZmYwMCIvPjwvc3ZnPg==", hasLights: true },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyNSIgeT0iMTUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI3MCIgZmlsbD0iIzMzMyIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMzAiIHI9IjEwIiBmaWxsPSIjZmYwMDAwIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTAiIGZpbGw9IiNmZmZmMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjcwIiByPSIxMCIgZmlsbD0iIzAwZmYwMCIvPjwvc3ZnPg==", hasLights: true },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iI2VlZSIvPjxsaW5lIHgxPSI1MCIgeTE9IjEwIiB4Mj0iNTAiIHkyPSI5MCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iMTAiIHkxPSI1MCIgeDI9IjkwIiB5Mj0iNTAiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+", hasLights: false },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNMjAsMjBoNjB2NjBIMjBWMjB6IiBmaWxsPSIjNDI4NWY0Ii8+PHBhdGggZD0iTTQwLDMwdDIwLDB0MjAsMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNNDAsNTB0MjAsMHQyMCwwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik00MCw3MHQyMCwwdDIwLDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PC9zdmc+", hasLights: false },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyNSIgeT0iMTUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI3MCIgZmlsbD0iIzMzMyIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMzAiIHI9IjEwIiBmaWxsPSIjZmYwMDAwIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTAiIGZpbGw9IiNmZmZmMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjcwIiByPSIxMCIgZmlsbD0iIzAwZmYwMCIvPjwvc3ZnPg==", hasLights: true },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNMjAsMjVoNjB2NTBIMjBWMjV6IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNjY2MiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iNDAiIHI9IjUiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2NSIgY3k9IjQwIiByPSI1IiBmaWxsPSIjMDAwIi8+PGxpbmUgeDE9IjM1IiB5MT0iNjAiIHgyPSI2NSIgeTI9IjYwIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==", hasLights: false },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iMTAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzc3NyIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMjUiIHI9IjEyIiBmaWxsPSIjZmYwMDAwIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTIiIGZpbGw9IiNmZmZmMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9Ijc1IiByPSIxMiIgZmlsbD0iIzAwZmYwMCIvPjwvc3ZnPg==", hasLights: true },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNMjAsMjBoNjB2NjBIMjBWMjB6IiBmaWxsPSIjZWVlIi8+PHJlY3QgeD0iMzAiIHk9IjMwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNDAsMzVsMjAsMTBNNDAsNTBsMjAsME00MCw2NWwyMCwtMTAiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+PC9zdmc+", hasLights: false },
+                { src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB4PSIyMCIgeT0iNSIgd2lkdGg9IjYwIiBoZWlnaHQ9IjkwIiBmaWxsPSIjNTU1Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIyNSIgcj0iMTIiIGZpbGw9IiNmZjAwMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxMiIgZmlsbD0iI2ZmZmYwMCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNzUiIHI9IjEyIiBmaWxsPSIjMDBmZjAwIi8+PC9zdmc+", hasLights: true }
+            ];
+            
+            // Shuffle the images randomly
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+            
+            const shuffledImages = shuffleArray([...imageSets]);
+            let selectedImages = [];
+            
+            // Create image elements
+            shuffledImages.forEach((image, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                imageItem.dataset.index = index;
+                imageItem.dataset.hasLights = image.hasLights;
+                
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = 'Verification image';
+                
+                const checkbox = document.createElement('div');
+                checkbox.className = 'image-checkbox';
+                
+                imageItem.appendChild(img);
+                imageItem.appendChild(checkbox);
+                
+                imageItem.addEventListener('click', () => {
+                    imageItem.classList.toggle('selected');
+                    
+                    if (imageItem.classList.contains('selected')) {
+                        selectedImages.push(index);
+                    } else {
+                        selectedImages = selectedImages.filter(i => i !== index);
+                    }
+                    
+                    verifyButton.disabled = selectedImages.length === 0;
+                });
+                
+                imageGrid.appendChild(imageItem);
+            });
+            
+            // Verify button click handler
+            verifyButton.addEventListener('click', () => {
+                // Check if all traffic light images are selected
+                const allCorrect = shuffledImages.every((image, index) => {
+                    if (image.hasLights) {
+                        return selectedImages.includes(index);
+                    }
+                    return true;
+                });
+                
+                if (allCorrect) {
+                    // Show loading spinner
+                    verifyButton.style.display = 'none';
+                    loadingSpinner.style.display = 'block';
+                    
+                    // Simulate verification process
+                    setTimeout(() => {
+                        loadingSpinner.style.display = 'none';
+                        ageConfirmation.style.display = 'block';
+                        continueButton.style.display = 'block';
+                    }, 2000);
+                } else {
+                    alert('Verification failed. Please select all traffic light images.');
+                    // Reset selection
+                    selectedImages.forEach(index => {
+                        document.querySelector(`.image-item[data-index="${index}"]`).classList.remove('selected');
+                    });
+                    selectedImages = [];
+                    verifyButton.disabled = true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

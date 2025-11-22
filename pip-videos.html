@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipytida Official • Hottest Videos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .header-icons i {
+            font-size: 20px;
+        }
+        
+        .video-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+        }
+        
+        .video-item {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .video-info {
+            margin-bottom: 15px;
+        }
+        
+        .username {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .follow-btn {
+            background-color: #fe2c55;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .video-caption {
+            font-size: 14px;
+            margin-bottom: 10px;
+            max-width: 70%;
+        }
+        
+        .video-sound {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .video-actions {
+            position: absolute;
+            right: 15px;
+            bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        
+        .action-icon i {
+            font-size: 24px;
+        }
+        
+        .action-count {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .profile-picture {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid white;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .profile-picture::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: -2px;
+            right: -2px;
+            top: -2px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            z-index: -1;
+        }
+        
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #262626;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-item.active {
+            color: white;
+        }
+        
+        .nav-item i {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        
+        .nav-item span {
+            font-size: 10px;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+        }
+        
+        .audio-control {
+            position: absolute;
+            top: 70px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Comments Section */
+        .comments-section {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 75%;
+            background-color: #000;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            z-index: 200;
+            transition: bottom 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .comments-section.active {
+            bottom: 0;
+        }
+        
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #262626;
+        }
+        
+        .comments-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .comments-count {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .close-comments {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .comment {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .comment-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .comment-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .comment-content {
+            flex: 1;
+        }
+        
+        .comment-username {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+            cursor: pointer;
+        }
+        
+        .comment-text {
+            font-size: 14px;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        .comment-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comment-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+        }
+        
+        .comment-input-container {
+            padding: 15px;
+            border-top: 1px solid #262626;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comment-input {
+            flex: 1;
+            background-color: #262626;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .send-comment {
+            background: none;
+            border: none;
+            color: #fe2c55;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .swipe-up-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        .music-beat {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-left: 5px;
+            position: relative;
+        }
+        
+        .music-beat::before, .music-beat::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #fe2c55;
+            animation: pulse 1s infinite;
+        }
+        
+        .music-beat::after {
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.7; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Following</h1>
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </div>
+    
+    <div class="video-container" id="videoContainer">
+        <!-- Videos will be dynamically added here -->
+        <div class="loading">Loading videos...</div>
+    </div>
+    
+    <div class="swipe-up-hint">
+        <i class="fa-solid fa-chevron-up"></i> Swipe up for comments
+    </div>
+    
+    <div class="comments-section" id="commentsSection">
+        <div class="comments-header">
+            <div>
+                <div class="comments-title">Comments</div>
+                <div class="comments-count" id="commentsCount">245 comments</div>
+            </div>
+            <button class="close-comments" id="closeComments">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="comments-list" id="commentsList">
+            <!-- Comments will be dynamically added here -->
+        </div>
+        <div class="comment-input-container">
+            <input type="text" class="comment-input" placeholder="Add a comment..." id="commentInput">
+            <button class="send-comment" id="sendComment">Post</button>
+        </div>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="navigation">
+        <a href="/" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de" class="nav-item">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Discover</span>
+        </a>
+        <a onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de" class="nav-item active">
+            <i class="fa-solid fa-plus-square"></i>
+            <span></span>
+        </a>
+        <a onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de" class="nav-item">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span>Inbox</span>
+        </a>
+        <a onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <script>
+        // Track like counts
+        let likeCounts = {};
+        
+        // Function to generate random video URLs
+        function getRandomVideoUrl() {
+            const randomVideoNumber = Math.floor(Math.random() * 100) + 1;
+            return `https://smrtmedia.github.io/video/${randomVideoNumber}.mp4`;
+        }
+        
+        // Dance-focused comments data
+        const danceComments = [
+            { username: "dance_lover", text: "OMG her moves are fire! 🔥", likes: 324, time: "2h" },
+            { username: "hiphop_king", text: "That body roll though! 😍", likes: 215, time: "3h" },
+            { username: "move_master", text: "She's killing it with those hips! 💃", likes: 187, time: "5h" },
+            { username: "rhythm_rider", text: "The way she moves is hypnotic 🥵", likes: 312, time: "1d" },
+            { username: "groove_guru", text: "That booty shake is everything! 🍑", likes: 431, time: "1d" },
+            { username: "dance_queen", text: "This choreography is insane! 💫", likes: 289, time: "6h" },
+            { username: "music_lover", text: "The rhythm is perfect! 🎵", likes: 156, time: "4h" },
+            { username: "tiktok_fan", text: "Going viral for sure! 🚀", likes: 423, time: "1d" }
+        ];
+        
+        // Video captions related to dance
+        const danceCaptions = [
+            "When the beat hits just right 💃",
+            "Feeling the rhythm tonight 🎵",
+            "Dance like nobody's watching ✨",
+            "This song makes me move! 🔥",
+            "Just expressing myself through dance 💫",
+            "Lost in the music 🎶",
+            "Dance is my therapy 💃",
+            "Feeling the vibe tonight 🌟",
+            "This energy is everything! ⚡",
+            "Moving to my own rhythm 🥁"
+        ];
+        
+        // Function to create video elements
+        function createVideoElement(videoIndex) {
+            const videoItem = document.createElement('div');
+            videoItem.className = 'video-item';
+            videoItem.dataset.videoIndex = videoIndex;
+            
+            const video = document.createElement('video');
+            video.className = 'video-player';
+            video.src = getRandomVideoUrl();
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            
+            // Generate random engagement numbers
+            const likes = Math.floor(Math.random() * 50000) + 1000;
+            const comments = Math.floor(Math.random() * 1000) + 100;
+            const shares = Math.floor(Math.random() * 500) + 50;
+            const caption = danceCaptions[Math.floor(Math.random() * danceCaptions.length)];
+            
+            // Initialize like count for this video
+            likeCounts[videoIndex] = likes;
+            
+            const videoOverlay = document.createElement('div');
+            videoOverlay.className = 'video-overlay';
+            
+            const videoInfo = document.createElement('div');
+            videoInfo.className = 'video-info';
+            
+            const username = document.createElement('div');
+            username.className = 'username';
+            username.innerHTML = 'Pipytida • PipTako🍑 <button class="follow-btn" onclick="window.open(\'https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de\', \'_blank\')">Follow</button>';
+            
+            const videoCaption = document.createElement('div');
+            videoCaption.className = 'video-caption';
+            videoCaption.textContent = caption;
+            
+            const videoSound = document.createElement('div');
+            videoSound.className = 'video-sound';
+            videoSound.innerHTML = '<i class="fa-solid fa-music"></i> Original Sound - Pipytida🍑 <span class="music-beat"></span>';
+            
+            videoInfo.appendChild(username);
+            videoInfo.appendChild(videoCaption);
+            videoInfo.appendChild(videoSound);
+            
+            const videoActions = document.createElement('div');
+            videoActions.className = 'video-actions';
+            
+            const likeAction = document.createElement('div');
+            likeAction.className = 'action-item';
+            likeAction.innerHTML = `
+                <div class="action-icon like-btn" data-video="${videoIndex}">
+                    <i class="fa-regular fa-heart"></i>
+                </div>
+                <div class="action-count like-count" data-video="${videoIndex}">${likes.toLocaleString()}</div>
+            `;
+            
+            const commentAction = document.createElement('div');
+            commentAction.className = 'action-item';
+            commentAction.innerHTML = `
+                <div class="action-icon comment-btn">
+                    <i class="fa-regular fa-comment"></i>
+                </div>
+                <div class="action-count">${comments.toLocaleString()}</div>
+            `;
+            
+            const downloadAction = document.createElement('div');
+            downloadAction.className = 'action-item';
+            downloadAction.innerHTML = `
+                <div class="action-icon download-btn">
+                    <i class="fas fa-download"></i>
+                </div>
+                <div class="action-count">${shares.toLocaleString()}</div>
+            `;
+            
+            const profilePicture = document.createElement('div');
+            profilePicture.className = 'action-item';
+            profilePicture.innerHTML = `
+                <div class="profile-picture" onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Profile">
+                </div>
+            `;
+            
+            videoActions.appendChild(likeAction);
+            videoActions.appendChild(commentAction);
+            videoActions.appendChild(downloadAction);
+            videoActions.appendChild(profilePicture);
+            
+            videoOverlay.appendChild(videoInfo);
+            
+            videoItem.appendChild(video);
+            videoItem.appendChild(videoOverlay);
+            videoItem.appendChild(videoActions);
+            
+            // Add audio control
+            const audioControl = document.createElement('div');
+            audioControl.className = 'audio-control';
+            audioControl.innerHTML = '<i class="fa-solid fa-music"></i> pipytida';
+            videoItem.appendChild(audioControl);
+            
+            return videoItem;
+        }
+        
+        // Function to populate comments
+        function populateComments() {
+            const commentsList = document.getElementById('commentsList');
+            const commentsCount = document.getElementById('commentsCount');
+            commentsList.innerHTML = '';
+            
+            const shuffledComments = [...danceComments].sort(() => 0.5 - Math.random());
+            const commentCount = Math.floor(Math.random() * 5) + 3;
+            const selectedComments = shuffledComments.slice(0, commentCount);
+            
+            commentsCount.textContent = `${Math.floor(Math.random() * 500) + 200} comments`;
+            
+            selectedComments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                
+                commentElement.innerHTML = `
+                    <div class="comment-avatar" onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">
+                        <img src="https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}" alt="${comment.username}">
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-username" onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">${comment.username}</div>
+                        <div class="comment-text">${comment.text}</div>
+                        <div class="comment-actions">
+                            <div class="comment-action">${comment.time}</div>
+                            <div class="comment-action">
+                                <i class="fa-regular fa-heart"></i> ${comment.likes}
+                            </div>
+                            <div class="comment-action" onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">Reply</div>
+                        </div>
+                    </div>
+                `;
+                
+                commentsList.appendChild(commentElement);
+            });
+        }
+        
+        // Like button handler - works immediately
+        function handleLike(likeBtn) {
+            const videoIndex = likeBtn.dataset.video;
+            const heartIcon = likeBtn.querySelector('i');
+            const likeCountElement = document.querySelector(`.like-count[data-video="${videoIndex}"]`);
+            
+            if (heartIcon.classList.contains('fa-regular')) {
+                heartIcon.classList.remove('fa-regular');
+                heartIcon.classList.add('fa-solid');
+                heartIcon.style.color = '#fe2c55';
+                
+                // Increase like count by 1
+                likeCounts[videoIndex]++;
+                likeCountElement.textContent = likeCounts[videoIndex].toLocaleString();
+            } else {
+                heartIcon.classList.remove('fa-solid');
+                heartIcon.classList.add('fa-regular');
+                heartIcon.style.color = '';
+                
+                // Decrease like count by 1
+                likeCounts[videoIndex]--;
+                likeCountElement.textContent = likeCounts[videoIndex].toLocaleString();
+            }
+        }
+        
+        // Initialize the video feed with continuous videos
+        const videoContainer = document.getElementById('videoContainer');
+        let videoCount = 0;
+        const initialVideos = 15; // Start with 15 videos for continuous watching
+        
+        function initializeVideos() {
+            videoContainer.innerHTML = '';
+            
+            // Add initial videos
+            for (let i = 0; i < initialVideos; i++) {
+                const videoElement = createVideoElement(i);
+                videoContainer.appendChild(videoElement);
+                videoCount++;
+            }
+            
+            // Set up intersection observer for videos
+            setupVideoObservers();
+        }
+        
+        // Handle video playback based on visibility
+        function setupVideoObservers() {
+            const videoPlayers = document.querySelectorAll('.video-player');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.7
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (entry.isIntersecting) {
+                        video.play();
+                    } else {
+                        video.pause();
+                        video.currentTime = 0;
+                    }
+                });
+            }, observerOptions);
+            
+            videoPlayers.forEach(video => {
+                observer.observe(video);
+            });
+        }
+        
+        // Load more videos when user scrolls near the end
+        function loadMoreVideos() {
+            const newVideos = 5; // Load 5 more videos at a time
+            for (let i = 0; i < newVideos; i++) {
+                const videoElement = createVideoElement(videoCount);
+                videoContainer.appendChild(videoElement);
+                videoCount++;
+            }
+            setupVideoObservers();
+        }
+        
+        // Comments functionality
+        const commentsSection = document.getElementById('commentsSection');
+        const overlay = document.getElementById('overlay');
+        const closeComments = document.getElementById('closeComments');
+        const sendComment = document.getElementById('sendComment');
+        const commentInput = document.getElementById('commentInput');
+        
+        // Global click handlers
+        document.addEventListener('click', function(e) {
+            // Like button handler - works immediately
+            if (e.target.closest('.like-btn')) {
+                const likeBtn = e.target.closest('.like-btn');
+                handleLike(likeBtn);
+            }
+            
+            // Download button - open smartlink
+            if (e.target.closest('.download-btn')) {
+                window.open('https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de');
+            }
+            
+            // Comment button
+            if (e.target.closest('.comment-btn')) {
+                populateComments();
+                commentsSection.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            // Video mute/unmute
+            if (e.target.classList.contains('video-player')) {
+                const video = e.target;
+                video.muted = !video.muted;
+                
+                const audioControl = video.parentElement.querySelector('.audio-control');
+                if (video.muted) {
+                    audioControl.innerHTML = '<i class="fa-solid fa-volume-mute"></i> pipytida';
+                } else {
+                    audioControl.innerHTML = '<i class="fa-solid fa-volume-high"></i> pipytida';
+                }
+                
+                setTimeout(() => {
+                    audioControl.innerHTML = '<i class="fa-solid fa-music"></i> pipytida';
+                }, 2000);
+            }
+        });
+        
+        // Close comments
+        closeComments.addEventListener('click', function() {
+            commentsSection.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        
+        // Send comment
+        sendComment.addEventListener('click', function() {
+            const commentText = commentInput.value.trim();
+            if (commentText) {
+                const commentsList = document.getElementById('commentsList');
+                const newComment = document.createElement('div');
+                newComment.className = 'comment';
+                
+                newComment.innerHTML = `
+                    <div class="comment-avatar" onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="You">
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-username" onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">You</div>
+                        <div class="comment-text">${commentText}</div>
+                        <div class="comment-actions">
+                            <div class="comment-action">Just now</div>
+                            <div class="comment-action">
+                                <i class="fa-regular fa-heart"></i> 0
+                            </div>
+                            <div class="comment-action" onclick="window.open('/');" href="https://rarelywithinlull.com/m1qecrwfy5?key=e1c23d61922eb3ca5ee1c8f7c9aad5de">Reply</div>
+                        </div>
+                    </div>
+                `;
+                
+                commentsList.appendChild(newComment);
+                commentInput.value = '';
+                
+                // Scroll to the new comment
+                commentsList.scrollTop = commentsList.scrollHeight;
+            }
+        });
+        
+        // Allow pressing Enter to send comment
+        commentInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendComment.click();
+            }
+        });
+        
+        // Infinite scroll - load more videos when near the end
+        videoContainer.addEventListener('scroll', function() {
+            const scrollPosition = videoContainer.scrollTop;
+            const containerHeight = videoContainer.clientHeight;
+            const scrollHeight = videoContainer.scrollHeight;
+            
+            // Load more videos when 80% scrolled
+            if (scrollPosition + containerHeight >= scrollHeight * 0.8) {
+                loadMoreVideos();
+            }
+        });
+        
+        // Initialize the app
+        initializeVideos();
+    </script>
+</body>
+</html>
